@@ -1,0 +1,30 @@
+services:
+  web:
+    image: php:8.2-apache
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      # Remplacement du volume nommé par un bind mount relatif aux dépôt GitHub
+      - ./src:/var/www/html
+    environment:
+      - DB_HOST=db
+      - DB_USER=user_etudiant
+      - DB_PASSWORD=mdp_etudiant
+      - DB_NAME=db_etudiant
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:10.11
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password_fort
+      MYSQL_DATABASE: db_etudiant
+      MYSQL_USER: user_etudiant
+      MYSQL_PASSWORD: mdp_etudiant
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
